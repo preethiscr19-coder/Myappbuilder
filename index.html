@@ -1,36 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
         }
 
-        @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-60px);
-            }
+        body.yes-clicked {
+            background: linear-gradient(135deg, #ff1744 0%, #ff5252 25%, #ff80ab 50%, #ff1744 75%, #ff5252 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
         }
 
-        .emotion {
-            position: fixed;
-            font-size: 2.5em;
-            pointer-events: none;
-            animation: floatAway 1s ease-in-out forwards;
-            z-index: 5;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        @keyframes floatAway {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) rotate(360deg);
-            }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            position: relative;
         }
 
-        /* Success Message */
+        .container.hidden { display: none; }
+
+        h1 {
+            font-size: 3em;
+            color: #d63384;
+            margin-bottom: 30px;
+            font-weight: bold;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .emoji { font-size: 4em; margin: 20px 0; }
+
+        .button-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #ff1744, #ff5252);
+            color: white;
+        }
+
+        .no-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+
         .success-message {
             display: none;
             text-align: center;
@@ -40,131 +94,63 @@
 
         .success-message.show {
             display: block;
-            animation: popIn 0.6s ease-in-out;
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .success-message h2 {
-            font-size: 3.5em;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-            animation: heartBeat 1.2s ease-in-out infinite;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .success-message p {
-            font-size: 2em;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Floating Hearts */
-        .floating-heart {
-            position: fixed;
-            font-size: 2em;
-            pointer-events: none;
-            animation: float-down 8s ease-in infinite;
-            opacity: 0.8;
-        }
-
-        @keyframes float-down {
-            0% {
-                transform: translateY(-100vh) translateX(0px) rotate(0deg);
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(100vh) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Smaller floating hearts inside container */
-        .mini-heart {
-            position: absolute;
-            font-size: 1.5em;
-            pointer-events: none;
-            animation: mini-float 6s ease-in-out infinite;
-        }
-
-        @keyframes mini-float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translate(var(--x), var(--y)) scale(1.2);
-                opacity: 1;
-            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container" id="mainContainer">
-        <h1>💕 Will You spend money for yourself? 💕</h1>
-        <div class="emoji" id="emoji">😊</div>
-        <div class="button-container">
-            <button class="yes-btn" onclick="handleYes()">YES ❤️</button>
-            <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
-        </div>
+
+<!-- 🎵 Background Music -->
+<audio id="bgMusic" autoplay loop muted>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="mainContainer">
+    <h1>💕 Will You spend money for yourself? 💕</h1>
+    <div class="emoji" id="emoji">😊</div>
+    <div class="button-container">
+        <button class="yes-btn" onclick="handleYes()">YES ❤️</button>
+        <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
     </div>
+</div>
 
-    <div class="success-message" id="successMessage">
-        <h2>Thank You! 💕</h2>
-        <p>Then take me to the shop to get you something special! ❤️</p>
-    </div>
+<div class="success-message" id="successMessage">
+    <h2 style="font-size:3em;color:white;">Thank You! 💕</h2>
+    <p style="font-size:1.5em;color:white;">
+        Then take me to the shop to get you something special! ❤️
+    </p>
+</div>
 
-    <script>
-        const emojiList = ['😄', '😊', '🥰', '😍', '🤩', '😆', '😁'];
-        const funnyEmojis = ['😅', '🤣', '😂', '😬', '😳', '🙃', '😏', '🤪', '😜'];
-        const containerElement = document.getElementById('mainContainer');
-        const successMessageElement = document.getElementById('successMessage');
-        const emojiElement = document.getElementById('emoji');
+<script>
+    const emojiList = ['😄','😊','🥰','😍','🤩','😆','😁'];
+    const funnyEmojis = ['😅','🤣','😂','😬','😳','🙃','😏','🤪','😜'];
 
-        // Handle Yes button click
-        function handleYes() {
-            containerElement.classList.add('hidden');
-            successMessageElement.classList.add('show');
-            document.body.classList.add('yes-clicked');
+    const containerElement = document.getElementById('mainContainer');
+    const successMessageElement = document.getElementById('successMessage');
+    const emojiElement = document.getElementById('emoji');
+    const bgMusic = document.getElementById("bgMusic");
 
-            // Create floating hearts
-            createFloatingHearts();
-        }
+    /* Autoplay muted (mobile safe) */
+    bgMusic.play().catch(()=>{});
 
-        // Handle No button click
-        function handleNo() {
-            // Show random funny emoji
-            const randomEmoji = funnyEmojis[Math.floor(Math.random() * funnyEmojis.length)];
-            showEmotion(event.target, randomEmoji);
+    /* Unmute on first tap */
+    document.addEventListener("click", function enableSound(){
+        bgMusic.muted = false;
+        bgMusic.play();
+        document.removeEventListener("click", enableSound);
+    });
 
-            // Shake effect
-            const noBtn = document.getElementById('noBtn');
-            noBtn.style.animation = 'none';
-            setTimeout(() => {
-                noBtn.style.animation = 'shake 0.5s ease-in-out';
-            }, 10);
-        }
+    function handleYes(){
+        containerElement.classList.add('hidden');
+        successMessageElement.classList.add('show');
+        document.body.classList.add('yes-clicked');
+    }
 
-        // Show floating emotion
-        function showEmotion(element, emoji) {
-            const emotion = document.createElement('div');
-            emotion.className = 'emotion';
-            emotion.textContent = emoji;
+    function handleNo(){
+        const randomEmoji = funnyEmojis[Math.floor(Math.random()*funnyEmojis.length)];
+        emojiElement.textContent = randomEmoji;
+    }
+</script>
 
+</body>
+</html>
