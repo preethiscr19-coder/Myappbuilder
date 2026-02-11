@@ -19,17 +19,19 @@
             overflow: hidden;
         }
 
-        /* Floating Smileys */
+        /* ✅ Floating Smileys - Mobile Safe */
         .smiley {
             position: fixed;
+            bottom: -50px;
             animation: floatUp linear infinite;
-            opacity: 0.7;
-            z-index: 1;
+            opacity: 0.8;
+            z-index: 2;
+            pointer-events: none;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(100vh); }
-            100% { transform: translateY(-10vh); }
+            from { transform: translateY(0); }
+            to { transform: translateY(-120vh); }
         }
 
         body.yes-clicked {
@@ -136,7 +138,6 @@
 </div>
 
 <script>
-    const emojiList = ['😄','😊','🥰','😍','🤩','😆','😁'];
     const funnyEmojis = ['😅','🤣','😂','😬','😳','🙃','😏','🤪','😜'];
     const floatingEmojis = ["😊","🥰","💖","😍","💕","💛","💫"];
 
@@ -145,25 +146,27 @@
     const emojiElement = document.getElementById('emoji');
     const bgMusic = document.getElementById("bgMusic");
 
-    /* Create floating smileys */
-    for (let i = 0; i < 35; i++) {
-        let smiley = document.createElement("div");
-        smiley.classList.add("smiley");
-        smiley.innerHTML = floatingEmojis[Math.floor(Math.random() * floatingEmojis.length)];
-        smiley.style.left = Math.random() * 100 + "vw";
-        smiley.style.fontSize = (10 + Math.random() * 15) + "px";
-        smiley.style.animationDuration = (20 + Math.random() * 20) + "s";
-        document.body.appendChild(smiley);
-    }
-
-    /* Autoplay muted (mobile safe) */
+    /* 🎵 Mobile Safe Music */
     bgMusic.play().catch(()=>{});
-
-    /* Unmute on first tap */
     document.addEventListener("click", function enableSound(){
         bgMusic.muted = false;
         bgMusic.play();
         document.removeEventListener("click", enableSound);
+    });
+
+    /* ✨ Create Floating Smileys */
+    window.addEventListener("load", function () {
+        for (let i = 0; i < 30; i++) {
+            const smiley = document.createElement("div");
+            smiley.className = "smiley";
+            smiley.innerHTML = floatingEmojis[Math.floor(Math.random() * floatingEmojis.length)];
+
+            smiley.style.left = Math.random() * 100 + "vw";
+            smiley.style.fontSize = (10 + Math.random() * 15) + "px";
+            smiley.style.animationDuration = (20 + Math.random() * 20) + "s";
+
+            document.body.appendChild(smiley);
+        }
     });
 
     function handleYes(){
