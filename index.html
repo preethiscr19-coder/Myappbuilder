@@ -37,10 +37,6 @@ body.yes-clicked{
     z-index:10;
 }
 
-.container.hidden{
-    display:none;
-}
-
 h1{
     color:#d63384;
     margin-bottom:20px;
@@ -70,7 +66,7 @@ button{
     color:white;
 }
 
-/* Emoji floating */
+/* Floating emoji */
 .emotion{
     position:fixed;
     font-size:40px;
@@ -90,16 +86,12 @@ button{
     font-size:30px;
     text-align:center;
 }
-
-.success-message.show{
-    display:block;
-}
 </style>
 </head>
 
 <body>
 
-<!-- Background Music -->
+<!-- 🎵 Background Music -->
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
@@ -111,4 +103,60 @@ button{
     <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
 </div>
 
-<div class="success-message" id="success
+<div class="success-message" id="successMessage">
+    Thank You! 💕
+</div>
+
+<script>
+const bgMusic = document.getElementById("bgMusic");
+const noBtn = document.getElementById("noBtn");
+const container = document.getElementById("mainContainer");
+const success = document.getElementById("successMessage");
+
+const funnyEmojis = ["😂","🤣","😜","🙃","😅","😏","🤪"];
+
+// Mobile-safe music start
+document.addEventListener("click", function(){
+    bgMusic.play().catch(()=>{});
+}, {once:true});
+
+function handleYes(){
+    bgMusic.play().catch(()=>{});
+    container.style.display = "none";
+    success.style.display = "block";
+    document.body.classList.add("yes-clicked");
+}
+
+function handleNo(){
+    showEmoji();
+    moveButton();
+}
+
+function showEmoji(){
+    const emoji = document.createElement("div");
+    emoji.className = "emotion";
+    emoji.innerText = funnyEmojis[Math.floor(Math.random()*funnyEmojis.length)];
+
+    const rect = noBtn.getBoundingClientRect();
+    emoji.style.left = rect.left + rect.width/2 + "px";
+    emoji.style.top = rect.top + "px";
+
+    document.body.appendChild(emoji);
+
+    setTimeout(()=> emoji.remove(),1000);
+}
+
+function moveButton(){
+    const padding = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.zIndex = "1000";
+    noBtn.style.left = Math.random()*maxX + "px";
+    noBtn.style.top = Math.random()*maxY + "px";
+}
+</script>
+
+</body>
+</html>
