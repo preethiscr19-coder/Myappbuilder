@@ -6,48 +6,42 @@
 <title>Valentine</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
-body{
-    font-family:Arial, sans-serif;
+body {
+    font-family: Arial, sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
     background:linear-gradient(135deg,#667eea,#764ba2);
     overflow:hidden;
-    transition:0.3s;
+    transition:0.4s;
 }
 
-body.yes-clicked{
+body.yes-bg {
     background:linear-gradient(135deg,#ff1744,#ff80ab,#ff1744);
 }
 
-.container{
+.container {
     background:white;
     padding:40px;
     border-radius:20px;
     text-align:center;
     box-shadow:0 10px 30px rgba(0,0,0,0.3);
-    position:relative;
-    z-index:10;
 }
 
-h1{
+h1 {
     color:#d63384;
     margin-bottom:20px;
 }
 
-.emoji{
+.emoji {
     font-size:60px;
     margin:20px 0;
 }
 
-button{
+button {
     padding:12px 30px;
     border:none;
     border-radius:30px;
@@ -56,106 +50,96 @@ button{
     cursor:pointer;
 }
 
-.yes-btn{
-    background:#ff1744;
+.yes-btn { background:#ff1744; color:white; }
+.no-btn { background:#444; color:white; }
+
+.success {
+    display:none;
+    font-size:30px;
     color:white;
+    text-align:center;
 }
 
-.no-btn{
-    background:#555;
-    color:white;
-}
-
-/* Floating emoji */
-.emotion{
+/* floating emoji */
+.float-emoji {
     position:fixed;
     font-size:40px;
     pointer-events:none;
     z-index:9999;
-    animation:floatUp 1s forwards;
+    animation:up 1s forwards;
 }
 
-@keyframes floatUp{
-    0%{opacity:1; transform:translateY(0);}
-    100%{opacity:0; transform:translateY(-120px);}
-}
-
-.success-message{
-    display:none;
-    color:white;
-    font-size:30px;
-    text-align:center;
+@keyframes up {
+    0% { opacity:1; transform:translateY(0); }
+    100% { opacity:0; transform:translateY(-120px); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Background Music -->
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container" id="mainContainer">
+<div class="container" id="box">
     <h1>💕 Will You spend money for yourself? 💕</h1>
     <div class="emoji">😊</div>
-    <button class="yes-btn" onclick="handleYes()">YES ❤️</button>
-    <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
+    <button id="yesBtn" class="yes-btn">YES ❤️</button>
+    <button id="noBtn" class="no-btn">NO</button>
 </div>
 
-<div class="success-message" id="successMessage">
+<div id="success" class="success">
     Thank You! 💕
 </div>
 
 <script>
-const bgMusic = document.getElementById("bgMusic");
+const music = document.getElementById("bgMusic");
+const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
-const container = document.getElementById("mainContainer");
-const success = document.getElementById("successMessage");
+const box = document.getElementById("box");
+const success = document.getElementById("success");
 
-const funnyEmojis = ["😂","🤣","😜","🙃","😅","😏","🤪"];
+const emojis = ["😂","🤣","😜","🙃","😅","😏","🤪"];
 
-// Mobile-safe music start
-document.addEventListener("click", function(){
-    bgMusic.play().catch(()=>{});
-}, {once:true});
+/* 🔊 Start music on first interaction */
+function startMusic(){
+    music.play().catch(()=>{});
+    document.removeEventListener("click", startMusic);
+}
+document.addEventListener("click", startMusic);
 
-function handleYes(){
-    bgMusic.play().catch(()=>{});
-    container.style.display = "none";
+/* ❤️ YES button */
+yesBtn.addEventListener("click", function(){
+    music.play().catch(()=>{});
+    box.style.display = "none";
     success.style.display = "block";
-    document.body.classList.add("yes-clicked");
-}
+    document.body.classList.add("yes-bg");
+});
 
-function handleNo(){
-    showEmoji();
-    moveButton();
-}
+/* 😜 NO button */
+noBtn.addEventListener("click", function(){
 
-function showEmoji(){
-    const emoji = document.createElement("div");
-    emoji.className = "emotion";
-    emoji.innerText = funnyEmojis[Math.floor(Math.random()*funnyEmojis.length)];
+    // show random emoji
+    const e = document.createElement("div");
+    e.className = "float-emoji";
+    e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
 
     const rect = noBtn.getBoundingClientRect();
-    emoji.style.left = rect.left + rect.width/2 + "px";
-    emoji.style.top = rect.top + "px";
+    e.style.left = rect.left + rect.width/2 + "px";
+    e.style.top = rect.top + "px";
 
-    document.body.appendChild(emoji);
+    document.body.appendChild(e);
+    setTimeout(()=> e.remove(),1000);
 
-    setTimeout(()=> emoji.remove(),1000);
-}
-
-function moveButton(){
-    const padding = 20;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    // move button
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
 
     noBtn.style.position = "fixed";
-    noBtn.style.zIndex = "1000";
     noBtn.style.left = Math.random()*maxX + "px";
     noBtn.style.top = Math.random()*maxY + "px";
-}
+});
 </script>
 
 </body>
