@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,9 +17,43 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: all 0.3s ease;
             overflow: hidden;
+            position: relative;
         }
 
-        /* ✅ Floating Smileys - Mobile Safe */
+        .container {
+            text-align: center;
+            z-index: 5;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 26px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s ease;
+            position: relative;
+        }
+
+        .yes-btn {
+            background: #ff1744;
+            color: white;
+        }
+
+        .no-btn {
+            background: white;
+            color: #333;
+            position: absolute;
+        }
+
+        /* Floating Smileys */
         .smiley {
             position: fixed;
             bottom: -50px;
@@ -27,6 +61,7 @@
             opacity: 0.8;
             z-index: 2;
             pointer-events: none;
+            font-size: 24px;
         }
 
         @keyframes floatUp {
@@ -35,9 +70,9 @@
         }
 
         body.yes-clicked {
-            background: linear-gradient(135deg, #ff1744 0%, #ff5252 25%, #ff80ab 50%, #ff1744 75%, #ff5252 100%);
+            background: linear-gradient(135deg, #ff1744, #ff80ab, #ff1744);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            animation: gradientShift 10s ease infinite;
         }
 
         @keyframes gradientShift {
@@ -45,141 +80,51 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 60px 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-            position: relative;
-        }
-
-        .container.hidden { display: none; }
-
-        h1 {
-            font-size: 3em;
-            color: #d63384;
-            margin-bottom: 30px;
-            font-weight: bold;
-            animation: bounce 1s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .emoji { font-size: 4em; margin: 20px 0; }
-
-        .button-container {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 15px 40px;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .yes-btn {
-            background: linear-gradient(135deg, #ff1744, #ff5252);
-            color: white;
-        }
-
-        .no-btn {
-            background: linear-gradient(135deg, #6c757d, #495057);
-            color: white;
-        }
-
-        .success-message {
-            display: none;
-            text-align: center;
-            z-index: 10;
-            position: relative;
-        }
-
-        .success-message.show {
-            display: block;
-        }
     </style>
 </head>
 
 <body>
 
-<!-- 🎵 Background Music -->
-<audio id="bgMusic" autoplay loop muted>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<div class="container" id="mainContainer">
-    <h1>💕 Will You spend money for yourself? 💕</h1>
-    <div class="emoji" id="emoji">😊</div>
-    <div class="button-container">
-        <button class="yes-btn" onclick="handleYes()">YES ❤️</button>
-        <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
+    <div class="container">
+        <h1>Will You Be My Valentine? 💖</h1>
+        <button class="yes-btn" onclick="sayYes()">Yes 💕</button>
+        <button class="no-btn" id="noBtn">No 😢</button>
     </div>
-</div>
 
-<div class="success-message" id="successMessage">
-    <h2 style="font-size:3em;color:white;">Thank You! 💕</h2>
-    <p style="font-size:1.5em;color:white;">
-        Then take me to the shop to get you something special! ❤️
-    </p>
-</div>
+    <script>
+        const noBtn = document.getElementById("noBtn");
 
-<script>
-    const funnyEmojis = ['😅','🤣','😂','😬','😳','🙃','😏','🤪','😜'];
-    const floatingEmojis = ["😊","🥰","💖","😍","💕","💛","💫"];
+        // Make NO button move randomly
+        noBtn.addEventListener("click", function () {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        });
 
-    const containerElement = document.getElementById('mainContainer');
-    const successMessageElement = document.getElementById('successMessage');
-    const emojiElement = document.getElementById('emoji');
-    const bgMusic = document.getElementById("bgMusic");
-
-    /* 🎵 Mobile Safe Music */
-    bgMusic.play().catch(()=>{});
-    document.addEventListener("click", function enableSound(){
-        bgMusic.muted = false;
-        bgMusic.play();
-        document.removeEventListener("click", enableSound);
-    });
-
-    /* ✨ Create Floating Smileys */
-    window.addEventListener("load", function () {
-        for (let i = 0; i < 30; i++) {
-            const smiley = document.createElement("div");
-            smiley.className = "smiley";
-            smiley.innerHTML = floatingEmojis[Math.floor(Math.random() * floatingEmojis.length)];
-
-            smiley.style.left = Math.random() * 100 + "vw";
-            smiley.style.fontSize = (10 + Math.random() * 15) + "px";
-            smiley.style.animationDuration = (20 + Math.random() * 20) + "s";
-
-            document.body.appendChild(smiley);
+        function sayYes() {
+            document.body.classList.add("yes-clicked");
+            alert("Yayyyy ❤️ You made my day!!! 💖🥰");
         }
-    });
 
-    function handleYes(){
-        containerElement.classList.add('hidden');
-        successMessageElement.classList.add('show');
-        document.body.classList.add('yes-clicked');
-    }
+        // Create floating smileys
+        const emojis = ["😊", "😍", "🥰", "😘", "💖", "💕"];
 
-    function handleNo(){
-        const randomEmoji = funnyEmojis[Math.floor(Math.random()*funnyEmojis.length)];
-        emojiElement.textContent = randomEmoji;
-    }
-</script>
+        function createSmiley() {
+            const smiley = document.createElement("div");
+            smiley.classList.add("smiley");
+            smiley.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            smiley.style.left = Math.random() * 100 + "vw";
+            smiley.style.animationDuration = (5 + Math.random() * 5) + "s";
+            document.body.appendChild(smiley);
+
+            setTimeout(() => {
+                smiley.remove();
+            }, 10000);
+        }
+
+        setInterval(createSmiley, 500);
+    </script>
 
 </body>
 </html>
