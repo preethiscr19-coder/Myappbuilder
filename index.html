@@ -6,24 +6,28 @@
 <title>Valentine</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-body {
-    font-family: Arial, sans-serif;
+body{
+    font-family:Arial, sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
-    min-height:100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    height:100vh;
+    background:linear-gradient(135deg,#667eea,#764ba2);
     overflow:hidden;
     transition:0.3s;
 }
 
-body.yes-clicked {
-    background: linear-gradient(135deg,#ff1744,#ff80ab,#ff1744);
+body.yes-clicked{
+    background:linear-gradient(135deg,#ff1744,#ff80ab,#ff1744);
 }
 
-.container {
+.container{
     background:white;
     padding:40px;
     border-radius:20px;
@@ -33,16 +37,21 @@ body.yes-clicked {
     z-index:10;
 }
 
-.container.hidden { display:none; }
+.container.hidden{
+    display:none;
+}
 
-h1 { color:#d63384; margin-bottom:20px; }
+h1{
+    color:#d63384;
+    margin-bottom:20px;
+}
 
-.emoji {
+.emoji{
     font-size:60px;
     margin:20px 0;
 }
 
-button {
+button{
     padding:12px 30px;
     border:none;
     border-radius:30px;
@@ -51,30 +60,39 @@ button {
     cursor:pointer;
 }
 
-.yes-btn { background:#ff1744; color:white; }
-.no-btn { background:#555; color:white; }
+.yes-btn{
+    background:#ff1744;
+    color:white;
+}
 
-.success-message {
+.no-btn{
+    background:#555;
+    color:white;
+}
+
+/* Emoji floating */
+.emotion{
+    position:fixed;
+    font-size:40px;
+    pointer-events:none;
+    z-index:9999;
+    animation:floatUp 1s forwards;
+}
+
+@keyframes floatUp{
+    0%{opacity:1; transform:translateY(0);}
+    100%{opacity:0; transform:translateY(-120px);}
+}
+
+.success-message{
     display:none;
     color:white;
     font-size:30px;
     text-align:center;
 }
 
-.success-message.show { display:block; }
-
-/* FIXED EMOJI */
-.emotion {
-    position:fixed;
-    font-size:40px;
-    pointer-events:none;
-    z-index:9999;
-    animation: floatUp 1s forwards;
-}
-
-@keyframes floatUp {
-    0% { opacity:1; transform:translate(0,0); }
-    100% { opacity:0; transform:translateY(-120px); }
+.success-message.show{
+    display:block;
 }
 </style>
 </head>
@@ -93,4 +111,4 @@ button {
     <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
 </div>
 
-<div class="success-mes
+<div class="success-message" id="success
