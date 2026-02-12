@@ -52,34 +52,6 @@
             color: #333;
             position: absolute;
         }
-
-        /* Floating Smileys */
-        .smiley {
-            position: fixed;
-            bottom: -50px;
-            animation: floatUp linear infinite;
-            opacity: 0.8;
-            z-index: 2;
-            pointer-events: none;
-            font-size: 24px;
-        }
-
-        @keyframes floatUp {
-            from { transform: translateY(0); }
-            to { transform: translateY(-120vh); }
-        }
-
-        body.yes-clicked {
-            background: linear-gradient(135deg, #ff1744, #ff80ab, #ff1744);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
     </style>
 </head>
 
@@ -88,42 +60,32 @@
     <div class="container">
         <h1>Will You Be My Valentine? 💖</h1>
         <button class="yes-btn" onclick="sayYes()">Yes 💕</button>
-        <button class="no-btn" id="noBtn">No 😢</button>
+        <button class="no-btn">No 😢</button>
     </div>
 
-    <script>
-        const noBtn = document.getElementById("noBtn");
+    <!-- ✅ Background Music (Mobile Safe) -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
-        // Make NO button move randomly
-        noBtn.addEventListener("click", function () {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
-        });
+    <script>
+        const bgMusic = document.getElementById("bgMusic");
+
+        function startMusic() {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener("click", startMusic);
+            document.removeEventListener("touchstart", startMusic);
+        }
+
+        // Works on Mobile + Desktop
+        document.addEventListener("click", startMusic);
+        document.addEventListener("touchstart", startMusic);
 
         function sayYes() {
-            document.body.classList.add("yes-clicked");
+            bgMusic.play();
+            document.body.style.background = "linear-gradient(135deg, #ff1744, #ff80ab)";
             alert("Yayyyy ❤️ You made my day!!! 💖🥰");
         }
-
-        // Create floating smileys
-        const emojis = ["😊", "😍", "🥰", "😘", "💖", "💕"];
-
-        function createSmiley() {
-            const smiley = document.createElement("div");
-            smiley.classList.add("smiley");
-            smiley.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-            smiley.style.left = Math.random() * 100 + "vw";
-            smiley.style.animationDuration = (5 + Math.random() * 5) + "s";
-            document.body.appendChild(smiley);
-
-            setTimeout(() => {
-                smiley.remove();
-            }, 10000);
-        }
-
-        setInterval(createSmiley, 500);
     </script>
 
 </body>
