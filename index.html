@@ -6,42 +6,42 @@
 <title>Valentine</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-body {
-    font-family: Arial, sans-serif;
+body{
+    font-family:Arial,sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
     background:linear-gradient(135deg,#667eea,#764ba2);
     overflow:hidden;
-    transition:0.4s;
+    transition:0.5s;
 }
 
-body.yes-bg {
+body.yes-bg{
     background:linear-gradient(135deg,#ff1744,#ff80ab,#ff1744);
 }
 
-.container {
+/* Main Box */
+.container{
     background:white;
     padding:40px;
     border-radius:20px;
     text-align:center;
     box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    position:relative;
+    z-index:10;
 }
 
-h1 {
-    color:#d63384;
-    margin-bottom:20px;
-}
+h1{color:#d63384;margin-bottom:20px;}
 
-.emoji {
+.emoji{
     font-size:60px;
     margin:20px 0;
 }
 
-button {
+button{
     padding:12px 30px;
     border:none;
     border-radius:30px;
@@ -50,28 +50,30 @@ button {
     cursor:pointer;
 }
 
-.yes-btn { background:#ff1744; color:white; }
-.no-btn { background:#444; color:white; }
+.yes-btn{background:#ff1744;color:white;}
+.no-btn{background:#444;color:white;position:absolute;}
 
-.success {
+/* Thank You Page */
+.success{
     display:none;
-    font-size:30px;
+    font-size:32px;
     color:white;
     text-align:center;
+    position:relative;
+    z-index:5;
 }
 
-/* floating emoji */
-.float-emoji {
+/* Floating Mini Hearts */
+.heart{
     position:fixed;
-    font-size:40px;
-    pointer-events:none;
-    z-index:9999;
-    animation:up 1s forwards;
+    font-size:20px;
+    animation:floatSlow linear infinite;
+    opacity:0.7;
 }
 
-@keyframes up {
-    0% { opacity:1; transform:translateY(0); }
-    100% { opacity:0; transform:translateY(-120px); }
+@keyframes floatSlow{
+    0%{transform:translateY(100vh) rotate(0deg);}
+    100%{transform:translateY(-10vh) rotate(360deg);}
 }
 </style>
 </head>
@@ -90,7 +92,7 @@ button {
 </div>
 
 <div id="success" class="success">
-    Thank You!Then take me to shop to get you something special 💕
+    Thank You! 💕
 </div>
 
 <script>
@@ -100,48 +102,52 @@ const noBtn = document.getElementById("noBtn");
 const box = document.getElementById("box");
 const success = document.getElementById("success");
 
-const emojis = ["😂","🤣","😜","🙃","😅","😏","🤪"];
-
-/* 🔊 Start music on first interaction */
-function startMusic(){
+/* Start music on first tap */
+document.addEventListener("click",()=>{
     music.play().catch(()=>{});
-    document.removeEventListener("click", startMusic);
-}
-document.addEventListener("click", startMusic);
+},{once:true});
 
-/* ❤️ YES button */
-yesBtn.addEventListener("click", function(){
+/* YES button */
+yesBtn.addEventListener("click",()=>{
     music.play().catch(()=>{});
-    box.style.display = "none";
-    success.style.display = "block";
+    box.style.display="none";
+    success.style.display="block";
     document.body.classList.add("yes-bg");
+    startHearts();
 });
 
-/* 😜 NO button */
-noBtn.addEventListener("click", function(){
+/* NO button should escape before clicking */
+function moveNoButton(){
+    const maxX = window.innerWidth - 120;
+    const maxY = window.innerHeight - 60;
 
-    // show random emoji
-    const e = document.createElement("div");
-    e.className = "float-emoji";
-    e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-
-    const rect = noBtn.getBoundingClientRect();
-    e.style.left = rect.left + rect.width/2 + "px";
-    e.style.top = rect.top + "px";
-
-    document.body.appendChild(e);
-    setTimeout(()=> e.remove(),1000);
-
-    // move button
-    const maxX = window.innerWidth - noBtn.offsetWidth;
-    const maxY = window.innerHeight - noBtn.offsetHeight;
-
-    noBtn.style.position = "fixed";
     noBtn.style.left = Math.random()*maxX + "px";
     noBtn.style.top = Math.random()*maxY + "px";
+}
+
+/* Move on hover (desktop) */
+noBtn.addEventListener("mouseenter", moveNoButton);
+
+/* Move on touch (mobile) */
+noBtn.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    moveNoButton();
 });
+
+/* Floating hearts on Thank You */
+function startHearts(){
+    setInterval(()=>{
+        const heart = document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤️";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.animationDuration=(5+Math.random()*5)+"s";
+        document.body.appendChild(heart);
+
+        setTimeout(()=>heart.remove(),10000);
+    },500);
+}
 </script>
 
 </body>
 </html>
-
