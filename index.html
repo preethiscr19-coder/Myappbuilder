@@ -3,62 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Will You Be My Valentine?</title>
+<title>Valentine</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    transition: all 0.3s ease;
-    overflow: hidden;
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    overflow:hidden;
+    transition:0.3s;
 }
 
 body.yes-clicked {
-    background: linear-gradient(135deg, #ff1744 0%, #ff5252 25%, #ff80ab 50%, #ff1744 75%, #ff5252 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: linear-gradient(135deg,#ff1744,#ff80ab,#ff1744);
 }
 
 .container {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 60px 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    position: relative;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    position:relative;
+    z-index:10;
 }
 
-.container.hidden {
-    display: none;
+.container.hidden { display:none; }
+
+h1 { color:#d63384; margin-bottom:20px; }
+
+.emoji {
+    font-size:60px;
+    margin:20px 0;
 }
 
-h1 {
-    font-size: 2.5em;
-    color: #d63384;
-    margin-bottom: 30px;
-    animation: bounce 1s ease-in-out infinite;
+button {
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    margin:10px;
+    cursor:pointer;
 }
 
-@keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+.yes-btn { background:#ff1744; color:white; }
+.no-btn { background:#555; color:white; }
+
+.success-message {
+    display:none;
+    color:white;
+    font-size:30px;
+    text-align:center;
 }
 
-.emoji
+.success-message.show { display:block; }
+
+/* FIXED EMOJI */
+.emotion {
+    position:fixed;
+    font-size:40px;
+    pointer-events:none;
+    z-index:9999;
+    animation: floatUp 1s forwards;
+}
+
+@keyframes floatUp {
+    0% { opacity:1; transform:translate(0,0); }
+    100% { opacity:0; transform:translateY(-120px); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="mainContainer">
+    <h1>💕 Will You spend money for yourself? 💕</h1>
+    <div class="emoji">😊</div>
+    <button class="yes-btn" onclick="handleYes()">YES ❤️</button>
+    <button class="no-btn" id="noBtn" onclick="handleNo()">NO</button>
+</div>
+
+<div class="success-mes
