@@ -66,11 +66,17 @@ button{
     cursor:pointer;
 }
 
-.yes-btn{background:#ff1744;color:white;}
+.yes-btn{
+    background:#ff1744;
+    color:white;
+    transition:0.3s;
+}
+
 .no-btn{
     background:#444;
     color:white;
     position:absolute;
+    transition:0.3s;
 }
 
 /* Thank You */
@@ -114,7 +120,7 @@ button{
     <h1>💕 Will You spend money for yourself? 💕</h1>
     <div class="emoji">😊</div>
     <button id="yesBtn" class="yes-btn">YES ❤️</button>
-    <button id="noBtn" class="no-btn">NO</button>
+    <button id="noBtn" class="no-btn">NO 😜</button>
 </div>
 
 <div id="success" class="success">
@@ -144,12 +150,23 @@ yesBtn.addEventListener("click", ()=>{
     startHearts();
 });
 
-/* NO Button Escape */
+/* YES Growing + NO Running */
+let yesSize = 18;
+let emojiList = ["😜","😝","😂","🙈","😅","😏","🤭","😆","🤣","😎"];
+
 function moveNo(){
     const maxX = window.innerWidth - 120;
     const maxY = window.innerHeight - 60;
+
     noBtn.style.left = Math.random()*maxX + "px";
     noBtn.style.top = Math.random()*maxY + "px";
+
+    const randomEmoji = emojiList[Math.floor(Math.random()*emojiList.length)];
+    noBtn.innerHTML = "NO " + randomEmoji;
+
+    yesSize += 5;
+    yesBtn.style.fontSize = yesSize + "px";
+    yesBtn.style.padding = (12 + yesSize/4) + "px " + (30 + yesSize/3) + "px";
 }
 
 noBtn.addEventListener("mouseenter", moveNo);
@@ -174,4 +191,3 @@ function startHearts(){
 
 </body>
 </html>
-
